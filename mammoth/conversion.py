@@ -62,19 +62,19 @@ class _DocumentConverter(documents.ElementVisitor):
             return self._convert_image(image)
         except InvalidFileReferenceError as error:
             self._messages.append(results.warning(str(error)))
+           # print "I'm visiting an image:", image
             return []
 
     def visit_document(self, document):
+        self._document = document
         nodes = self._visit_all(document.children)
-        notes = [
-            document.notes.resolve(reference)
-            for reference in self._note_references
-        ]
-        notes_list = html.element("ol", {}, self._visit_all(notes))
-        return nodes + [notes_list]
+       # print "I'm visiting a document:", document
+        return nodes
 
 
     def visit_paragraph(self, paragraph):
+        self._paragraph = paragraph
+        self._paragraph._note_references = []
         content = self._visit_all(paragraph.children)
         if self._ignore_empty_paragraphs:
             children = content
@@ -82,7 +82,16 @@ class _DocumentConverter(documents.ElementVisitor):
             children = [html.force_write] + content
         
         html_path = self._find_html_path_for_paragraph(paragraph)
-        return html_path.wrap(children)
+        notes = []
+        for reference,number in self._paragraph._note_references:
+            note = self._document.notes.resolve(reference)
+            note._number = number
+            notes.append(note)
+        notes_list = html.element("ol", {}, self._visit_all(notes))
+        
+        
+        #print "I'm visiting a paragraph:", paragraph
+        return html_path.wrap(children) + [notes_list]
 
 
     def visit_run(self, run):
@@ -102,6 +111,7 @@ class _DocumentConverter(documents.ElementVisitor):
         html_path = self._find_html_path_for_run(run)
         if html_path:
             nodes = html_path.wrap(nodes)
+      #  print "I'm visiting a run:", run
         return nodes
     
     
@@ -119,6 +129,7 @@ class _DocumentConverter(documents.ElementVisitor):
             return html_paths.empty
 
     def visit_text(self, text):
+       # print "I'm visiting text:", text
         return [html.text(text.value)]
     
     
@@ -129,6 +140,7 @@ class _DocumentConverter(documents.ElementVisitor):
             href = "#{0}".format(self._html_id(hyperlink.anchor))
         
         nodes = self._visit_all(hyperlink.children)
+     #   print "I'm visiting a link:", hyperlink
         return [html.collapsible_element("a", {"href": href}, nodes)]
     
     
@@ -137,64 +149,79 @@ class _DocumentConverter(documents.ElementVisitor):
             "a",
             {"id": self._html_id(bookmark.name)},
             [html.force_write])
+       # print "I'm visiting a bookmark:", bookmark
         return [element]
     
     
     def visit_tab(self, tab):
+      #  print "I'm visiting a tab:", tab
         return [html.text("\t")]
     
     
     def visit_table(self, table):
+     #   print "I'm visiting a table:", table
         return [html.element("table", {}, self._visit_all(table.children))]
     
     
     def visit_table_row(self, table_row):
+      #  print "I'm visiting a table row:", table_row
         return [html.element("tr", {}, self._visit_all(table_row.children))]
     
     
     def visit_table_cell(self, table_cell):
         nodes = [html.force_write] + self._visit_all(table_cell.children)
+       # print "I'm visiting a table_cell:", table_cell
         return [
             html.element("td", {}, nodes)
         ]
     
     
     def visit_line_break(self, line_break):
+     #   print "I'm visiting a line_break:", line_break
         return [html.self_closing_element("br")]
     
     def visit_note_reference(self, note_reference):
         self._note_references.append(note_reference);
         note_number = len(self._note_references)
+        self._paragraph._note_references.append((note_reference, note_number))
+       # print "I'm visiting a note_reference:", note_reference
         return [
-            html.element("sup", {}, [
-                html.element("a", {
-                    "href": "#" + self._note_html_id(note_reference),
-                    "id": self._note_ref_html_id(note_reference),
-                }, [html.text("[{0}]".format(note_number))])
+            html.element("a", {
+                "href": "#",
+                "id": self._note_ref_html_id(note_reference),
+                "data-target": "tooltip" + str(note_number)
+            }, 
+            [
+                html.element("sup", {}, [
+                    html.text(str(note_number))
+                ])
             ])
         ]
     
     def visit_note(self, note):
-        note_body = self._visit_all(note.body) + [
-            html.collapsible_element("p", {}, [
-                html.text(" "),
-                html.element("a", {"href": "#" + self._note_ref_html_id(note)}, [
-                    html.text(_up_arrow)
-                ]),
+        note_number = html.element(
+            "sup", {}, [
+                html.text(str(note._number))
             ])
-        ]
+        note_paras = self._visit_all(note.body)
+        note_paras[0].children.insert(0, note_number)
+        #print "I'm visiting a note:", note
         return [
-            html.element("li", {"id": self._note_html_id(note)}, note_body)
+            html.element("div", {
+                    "class": "footnote",
+                    "id": "tooltip" + str(note._number),
+                }, 
+                note_paras)
         ]
-        self._html_generator.start("li", {"id": self._note_html_id(note)})
-        note_generator = self._html_generator.child()
-        self._with_html_generator(note_generator)._visit_all(note.body)
-        note_generator.text(" ")
-        note_generator.start("a", {"href": "#" + self._note_ref_html_id(note)})
-        note_generator.text(_up_arrow)
-        note_generator.end_all()
-        self._html_generator.append(note_generator)
-        self._html_generator.end()
+        # self._html_generator.start("li", {"id": self._note_html_id(note)})
+        # note_generator = self._html_generator.child()
+        # self._with_html_generator(note_generator)._visit_all(note.body)
+        # note_generator.text(" ")
+        # note_generator.start("a", {"href": "#" + self._note_ref_html_id(note)})
+        # note_generator.text(_up_arrow)
+        # note_generator.end_all()
+        # self._html_generator.append(note_generator)
+        # self._html_generator.end()
 
 
     def _visit_all(self, elements):

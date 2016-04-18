@@ -2,7 +2,7 @@
 
 import os
 import sys
-from distutils.core import setup
+from setuptools import setup
 
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
@@ -20,7 +20,7 @@ setup(
     name='mammoth',
     version='1.0.0',
     description='Convert Word documents from docx to simple and clean HTML and Markdown',
-    long_description=read("README"),
+    long_description=read("README.md"),
     author='Michael Williamson',
     author_email='mike@zwobble.org',
     url='http://github.com/mwilliamson/python-mammoth',
