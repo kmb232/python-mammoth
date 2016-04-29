@@ -180,13 +180,19 @@ def _create_reader(numbering, content_types, relationships, styles, docx_file, f
         relationship_id = element.attributes.get("r:id")
         anchor = element.attributes.get("w:anchor")
         children_result = _read_xml_elements(element.children)
-        if relationship_id is not None:
+        if relationship_id is not None and anchor is not None:
+            href = relationships[relationship_id].target
+            href = href+"#"+anchor
+            return children_result.map(lambda children: documents.hyperlink(href=href, children=children))
+        elif relationship_id is not None:
             href = relationships[relationship_id].target
             return children_result.map(lambda children: documents.hyperlink(href=href, children=children))
         elif anchor is not None:
             return children_result.map(lambda children: documents.hyperlink(anchor=anchor, children=children))
         else:
             return children_result
+
+
     
     def bookmark_start(element):
         name = element.attributes.get("w:name")

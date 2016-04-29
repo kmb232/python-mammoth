@@ -140,7 +140,7 @@ class _DocumentConverter(documents.ElementVisitor):
             href = "#{0}".format(self._html_id(hyperlink.anchor))
         
         nodes = self._visit_all(hyperlink.children)
-     #   print "I'm visiting a link:", hyperlink
+        #print ("I'm visiting a link:", hyperlink, href)
         return [html.collapsible_element("a", {"href": href}, nodes)]
     
     
