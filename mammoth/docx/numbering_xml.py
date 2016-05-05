@@ -30,7 +30,7 @@ def _read_abstract_num_level(element):
     level_index = element.attributes["w:ilvl"]
     num_fmt = element.find_child_or_null("w:numFmt").attributes.get("w:val")
     is_ordered = num_fmt != "bullet"
-    return numbering_level(level_index, is_ordered)
+    return numbering_level(level_index, is_ordered, num_fmt)
 
 
 def _read_nums(element, abstract_nums):

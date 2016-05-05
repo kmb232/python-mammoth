@@ -114,13 +114,14 @@ table_row = TableRow
 table_cell = TableCell
 line_break = LineBreak
 
-def numbering_level(level_index, is_ordered):
-    return _NumberingLevel(str(level_index), bool(is_ordered))
+def numbering_level(level_index, is_ordered, num_fmt):
+    return _NumberingLevel(str(level_index), bool(is_ordered), str(num_fmt))
 
 @cobble.data
 class _NumberingLevel(object):
     level_index = cobble.field()
     is_ordered = cobble.field()
+    num_fmt = cobble.field()
 
 @cobble.data
 class Note(Element):
