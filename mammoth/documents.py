@@ -115,8 +115,9 @@ table_cell = TableCell
 line_break = LineBreak
 
 
-def numbering_level(level_index, is_ordered, num_fmt):
-    return _NumberingLevel(str(level_index), bool(is_ordered), str(num_fmt))
+def numbering_level(level_index, is_ordered, num_fmt=None):
+    num_fmt = None if not is_ordered else num_fmt
+    return _NumberingLevel(str(level_index), bool(is_ordered), num_fmt)
 
 
 @cobble.data

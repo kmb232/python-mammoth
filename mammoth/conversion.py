@@ -80,7 +80,7 @@ class _DocumentConverter(documents.ElementVisitor):
             children = content
         else:
             children = [html.force_write] + content
-        
+
         html_path = self._find_html_path_for_paragraph(paragraph)
         notes = []
         for reference,number in self._paragraph._note_references:
@@ -88,7 +88,6 @@ class _DocumentConverter(documents.ElementVisitor):
             note._number = number
             notes.append(note)
         notes_list = html.element("ol", {}, self._visit_all(notes))
-        
         
         #print "I'm visiting a paragraph:", paragraph
         return html_path.wrap(children) + [notes_list]

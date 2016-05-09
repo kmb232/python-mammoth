@@ -40,7 +40,7 @@ class HtmlPathElement(object):
         else:
             attributes = {}
         if self.extra_attributes:
-            attributes.update(extra_attributes)
+            attributes.update(self.extra_attributes)
         element = html.element(
             self.names,
             attributes,

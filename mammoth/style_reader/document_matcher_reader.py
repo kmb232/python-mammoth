@@ -93,7 +93,7 @@ list = ":" list_type "(" ~"[0-9]+" optional_num_fmt? ")"
 
 optional_num_fmt = "," num_fmt
 
-num_fmt = "decimal" / "letter" / "roman" / "upperLetter" / "upperRoman"
+num_fmt = "decimal" / "lowerLetter" / "lowerRoman" / "upperLetter" / "upperRoman"
 
 list_type = "ordered-list" / "unordered-list"
 """
