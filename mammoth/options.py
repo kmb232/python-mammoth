@@ -71,26 +71,26 @@ p:ordered-list(1,lowerLetter) => ol > li{type=a}:fresh
 p:ordered-list(1,lowerRoman) => ol > li{type=i}:fresh
 p:ordered-list(1,upperLetter) => ol > li{type=A}:fresh
 p:ordered-list(1,upperRoman) => ol > li{type=I}:fresh
-p:ordered-list(2,decimal) => ul|ol > li > ol > li{type=1}:fresh
-p:ordered-list(2,lowerLetter) => ul|ol > li > ol > li{type=a}:fresh
-p:ordered-list(2,lowerRoman) => ul|ol > li > ol > li{type=i}:fresh
-p:ordered-list(2,upperLetter) => ul|ol > li > ol > li{type=A}:fresh
-p:ordered-list(2,upperRoman) => ul|ol > li > ol > li{type=I}:fresh
-p:ordered-list(3,decimal) => ul|ol > li > ul|ol > li > ol > li{type=1}:fresh
-p:ordered-list(3,lowerLetter) => ul|ol > li > ul|ol > li > ol > li{type=a}:fresh
-p:ordered-list(3,lowerRoman) => ul|ol > li > ul|ol > li > ol > li{type=i}:fresh
-p:ordered-list(3,upperLetter) => ul|ol > li > ul|ol > li > ol > li{type=A}:fresh
-p:ordered-list(3,upperRoman) => ul|ol > li > ul|ol > li > ol > li{type=I}:fresh
-p:ordered-list(4,decimal) => ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=1}:fresh
-p:ordered-list(4,lowerLetter) => ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=a}:fresh
-p:ordered-list(4,lowerRoman) => ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=i}:fresh
-p:ordered-list(4,upperLetter) => ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=A}:fresh
-p:ordered-list(4,upperRoman) => ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=I}:fresh
-p:ordered-list(5,decimal) => ul|ol > li > ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=1}:fresh
-p:ordered-list(5,lowerLetter) => ul|ol > li > ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=a}:fresh
-p:ordered-list(5,lowerRoman) => ul|ol > li > ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=i}:fresh
-p:ordered-list(5,upperLetter) => ul|ol > li > ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=A}:fresh
-p:ordered-list(5,upperRoman) => ul|ol > li > ul|ol > li > ul|ol > li > ul|ol > li > ol > li{type=I}:fresh
+p:ordered-list(2,decimal) => ul|ol > li!merge > ol > li{type=1}:fresh
+p:ordered-list(2,lowerLetter) => ul|ol > li!merge > ol > li{type=a}:fresh
+p:ordered-list(2,lowerRoman) => ul|ol > li!merge > ol > li{type=i}:fresh
+p:ordered-list(2,upperLetter) => ul|ol > li!merge > ol > li{type=A}:fresh
+p:ordered-list(2,upperRoman) => ul|ol > li!merge > ol > li{type=I}:fresh
+p:ordered-list(3,decimal) => ul|ol > li!merge > ul|ol > li!merge > ol > li{type=1}:fresh
+p:ordered-list(3,lowerLetter) => ul|ol > li!merge > ul|ol > li!merge > ol > li{type=a}:fresh
+p:ordered-list(3,lowerRoman) => ul|ol > li!merge > ul|ol > li!merge > ol > li{type=i}:fresh
+p:ordered-list(3,upperLetter) => ul|ol > li!merge > ul|ol > li!merge > ol > li{type=A}:fresh
+p:ordered-list(3,upperRoman) => ul|ol > li!merge > ul|ol > li!merge > ol > li{type=I}:fresh
+p:ordered-list(4,decimal) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=1}:fresh
+p:ordered-list(4,lowerLetter) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=a}:fresh
+p:ordered-list(4,lowerRoman) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=i}:fresh
+p:ordered-list(4,upperLetter) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=A}:fresh
+p:ordered-list(4,upperRoman) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=I}:fresh
+p:ordered-list(5,decimal) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=1}:fresh
+p:ordered-list(5,lowerLetter) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=a}:fresh
+p:ordered-list(5,lowerRoman) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=i}:fresh
+p:ordered-list(5,upperLetter) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=A}:fresh
+p:ordered-list(5,upperRoman) => ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ul|ol > li!merge > ol > li{type=I}:fresh
 
 
 

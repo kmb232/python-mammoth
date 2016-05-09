@@ -28,8 +28,10 @@ def _read_element_node(node):
     class_names = _read_class_names_node(node.children[1])
     extra_attributes = _read_extra_attributes_node(node.children[2])
     fresh = _read_fresh_node(node.children[3])
+    always_merge = _read_always_merge_node(node.children[4])
     return html_paths.element(tag_names, class_names=class_names,
-                              extra_attributes=extra_attributes, fresh=fresh)
+                              extra_attributes=extra_attributes, fresh=fresh,
+                              always_merge=always_merge)
 
 
 def _read_tag_names_node(node):
@@ -67,6 +69,10 @@ def _read_fresh_node(node):
     return len(node.children) > 0
 
 
+def _read_always_merge_node(node):
+    return len(node.children) > 0
+
+
 def _repeated_children_with_separator(node, has_whitespace):
     yield node.children[0]
 
@@ -86,7 +92,7 @@ html_path = html_path_elements?
 
 html_path_elements = element (whitespace* ">" whitespace* element)*
 
-element = tag_names class_name* attrs? fresh?
+element = tag_names class_name* attrs? fresh? always_merge?
 
 tag_names = identifier ("|" identifier)*
 
@@ -99,6 +105,8 @@ attr_pair = identifier "=" identifier
 comma_attr_pair = "," attr_pair
 
 fresh = ":fresh"
+
+always_merge = "!merge"
 
 identifier = ~"[A-Z0-9]+"i
 
