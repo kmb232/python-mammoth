@@ -57,7 +57,7 @@ class LineBreak(Element):
 @cobble.data
 class Tab(Element):
     pass
-    
+
 
 @cobble.visitable
 class Image(Element):
@@ -107,15 +107,17 @@ class Bookmark(Element):
     name = cobble.field()
 
 bookmark = Bookmark
-    
+
 
 table = Table
 table_row = TableRow
 table_cell = TableCell
 line_break = LineBreak
 
+
 def numbering_level(level_index, is_ordered, num_fmt):
     return _NumberingLevel(str(level_index), bool(is_ordered), str(num_fmt))
+
 
 @cobble.data
 class _NumberingLevel(object):
@@ -136,13 +138,13 @@ note = Note
 class Notes(object):
     def __init__(self, notes):
         self._notes = notes
-    
+
     def find_note(self, note_type, note_id):
         return self._notes[(note_type, note_id)]
-    
+
     def resolve(self, reference):
         return self.find_note(reference.note_type, reference.note_id)
-    
+
     def __eq__(self, other):
         return isinstance(other, Notes) and self._notes == other._notes
 
@@ -154,7 +156,7 @@ def notes(notes_list):
         (_note_key(note), note)
         for note in notes_list
     ))
-    
+
 def _note_key(note):
     return (note.note_type, note.note_id)
 
