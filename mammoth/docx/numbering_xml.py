@@ -50,7 +50,7 @@ def _read_num(element, abstract_nums):
 class Numbering(object):
     def __init__(self, nums):
         self._nums = nums
-    
+
     def find_level(self, num_id, level):
         num = self._nums.get(num_id)
         if num is None:

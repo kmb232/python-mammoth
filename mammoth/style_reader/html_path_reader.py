@@ -26,8 +26,10 @@ def _read_html_path_elements_node(path_node):
 def _read_element_node(node):
     tag_names = _read_tag_names_node(node.children[0])
     class_names = _read_class_names_node(node.children[1])
-    fresh = _read_fresh_node(node.children[2])
-    return html_paths.element(tag_names, class_names=class_names, fresh=fresh)
+    extra_attributes = _read_extra_attributes_node(node.children[2])
+    fresh = _read_fresh_node(node.children[3])
+    return html_paths.element(tag_names, class_names=class_names,
+                              extra_attributes=extra_attributes, fresh=fresh)
 
 
 def _read_tag_names_node(node):
@@ -48,18 +50,31 @@ def _read_class_name_node(node):
     return node.children[1].text
 
 
+def _read_extra_attributes_node(extra_attributes_node):
+    if extra_attributes_node.text:
+        initial_node = extra_attributes_node.children[0].children[1]
+        more_nodes = [n.children[1] for n in
+                      extra_attributes_node.children[0].children[2].children]
+        return dict(_read_extra_attribute_node(node) for node in
+                    [initial_node] + more_nodes)
+
+
+def _read_extra_attribute_node(node):
+    return (node.children[0].text, node.children[2].text)
+
+
 def _read_fresh_node(node):
     return len(node.children) > 0
 
 
 def _repeated_children_with_separator(node, has_whitespace):
     yield node.children[0]
-    
+
     if has_whitespace:
         sequence_node_index = 3
     else:
         sequence_node_index = 1
-    
+
     sequence_node = node.children[1]
     for child in sequence_node.children:
         yield child.children[sequence_node_index]
@@ -71,11 +86,17 @@ html_path = html_path_elements?
 
 html_path_elements = element (whitespace* ">" whitespace* element)*
 
-element = tag_names class_name* fresh?
+element = tag_names class_name* attrs? fresh?
 
 tag_names = identifier ("|" identifier)*
 
 class_name = "." identifier
+
+attrs = "{" attr_pair comma_attr_pair* "}"
+
+attr_pair = identifier "=" identifier
+
+comma_attr_pair = "," attr_pair
 
 fresh = ":fresh"
 
@@ -86,4 +107,3 @@ whitespace = ~"\s"*
 """
 
 _grammar = Grammar(grammar_text)
-

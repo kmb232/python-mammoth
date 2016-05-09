@@ -20,7 +20,7 @@ class ReadHtmlPathTests(object):
             read_html_path("p")
         )
 
-    
+
     @istest
     def can_read_choice_of_two_elements(self):
         assert_equal(
@@ -28,7 +28,7 @@ class ReadHtmlPathTests(object):
             read_html_path("ul|ol")
         )
 
-    
+
     @istest
     def can_read_choice_of_three_elements(self):
         assert_equal(
@@ -36,7 +36,7 @@ class ReadHtmlPathTests(object):
             read_html_path("ul|ol|p")
         )
 
-    
+
     @istest
     def can_read_nested_elements(self):
         assert_equal(
@@ -44,7 +44,7 @@ class ReadHtmlPathTests(object):
             read_html_path("ul > li")
         )
 
-    
+
     @istest
     def can_read_class_on_element(self):
         assert_equal(
@@ -52,7 +52,7 @@ class ReadHtmlPathTests(object):
             read_html_path("p.tip")
         )
 
-    
+
     @istest
     def can_read_multiple_classes_on_element(self):
         assert_equal(
@@ -60,12 +60,43 @@ class ReadHtmlPathTests(object):
             read_html_path("p.tip.help")
         )
 
-    
+
     @istest
     def can_read_when_element_must_be_fresh(self):
         assert_equal(
             html_paths.path([html_paths.element(["p"], fresh=True)]),
             read_html_path("p:fresh")
+        )
+
+    @istest
+    def can_read_attribute_on_element(self):
+        assert_equal(
+            html_paths.path([html_paths.element(["li"], class_names=[],
+                                                extra_attributes={'type': '1'})]),
+            read_html_path("li{type=1}")
+        )
+
+    @istest
+    def can_read_multiple_attributes_on_element(self):
+        assert_equal(
+            html_paths.path([
+                html_paths.element(["li"], class_names=[],
+                                   extra_attributes={'id': 'one',
+                                                     'type': 'i',
+                                                     'name': 'test'})]),
+            read_html_path("li{id=one,type=i,name=test}")
+        )
+
+    @istest
+    def can_read_all_the_things_on_element(self):
+        assert_equal(
+            html_paths.path([
+                html_paths.element(["p"], class_names=["tip", "top"],
+                                   extra_attributes={'id': 'para',
+                                                     'data': 'ordered',
+                                                     'name': 'test'},
+                                   fresh=True)]),
+            read_html_path("p.tip.top{id=para,data=ordered,name=test}:fresh")
         )
 
 
@@ -77,56 +108,62 @@ class ReadDocumentMatcherTests(object):
             document_matchers.paragraph(),
             read_document_matcher("p")
         )
-    
-    
+
+
     @istest
     def reads_paragraph_with_style_id(self):
         assert_equal(
             document_matchers.paragraph(style_id="Heading1"),
             read_document_matcher("p.Heading1")
         )
-    
-    
+
+
     @istest
     def reads_paragraph_with_style_name(self):
         assert_equal(
             document_matchers.paragraph(style_name="Heading 1"),
             read_document_matcher("p[style-name='Heading 1']")
         )
-    
-    
+
+
     @istest
     def reads_paragraph_ordered_list(self):
         assert_equal(
             document_matchers.paragraph(numbering=documents.numbering_level(1, is_ordered=True)),
             read_document_matcher("p:ordered-list(2)")
         )
-    
-    
+
+
     @istest
     def reads_paragraph_unordered_list(self):
         assert_equal(
             document_matchers.paragraph(numbering=documents.numbering_level(1, is_ordered=False)),
             read_document_matcher("p:unordered-list(2)")
         )
-    
-    
+
+    @istest
+    def reads_paragraph_ordered_list_with_num_fmt(self):
+        assert_equal(
+            document_matchers.paragraph(numbering=documents.numbering_level(0, is_ordered=True, num_fmt='decimal')),
+            read_document_matcher("p:ordered-list(1,decimal)")
+        )
+
     @istest
     def reads_plain_run(self):
         assert_equal(
             document_matchers.run(),
             read_document_matcher("r")
         )
-    
-    
+
+
     @istest
     def reads_run_with_style_id(self):
         assert_equal(
             document_matchers.run(style_id="Emphasis"),
             read_document_matcher("r.Emphasis")
         )
-    
-    
+
+
     @istest
     def reads_run_with_style_name(self):
         assert_equal(

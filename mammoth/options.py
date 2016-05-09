@@ -5,7 +5,7 @@ def read_options(options):
     custom_style_map_result = _read_style_map(options.get("style_map") or "")
     include_default_style_map = options.get("include_default_style_map", True)
     options["ignore_empty_paragraphs"] = options.get("ignore_empty_paragraphs", True)
-    
+
     options["style_map"] = custom_style_map_result.value + \
         (_default_style_map if include_default_style_map else [])
     return custom_style_map_result.map(lambda _: options)
@@ -15,7 +15,7 @@ def _read_style_map(style_text):
     lines = filter(None, map(_get_line, style_text.split("\n")))
     return results.combine(lists.map(style_reader.read_style, lines)) \
         .map(lambda style_mappings: lists.filter(None, style_mappings))
-    
+
 
 def _get_line(line):
     line = line.strip()
@@ -46,7 +46,7 @@ p[style-name='footnote text'] => p
 r[style-name='footnote reference'] =>
 p[style-name='endnote text'] => p
 r[style-name='endnote reference'] =>
-        
+
 # LibreOffice
 p[style-name='Footnote'] => p
 r[style-name='Footnote anchor'] =>
@@ -64,11 +64,17 @@ p:ordered-list(3) => ul|ol > li > ul|ol > li > ol > li:fresh
 p:ordered-list(4) => ul|ol > li > ul|ol > li > ul|ol > li > ol > li:fresh
 p:ordered-list(5) => ul|ol > li > ul|ol > li > ul|ol > li > ul|ol > li > ol > li:fresh
 
+# pattern for different numbering formats
+p:ordered-list(1,decimal) => ol > li{type=1}:fresh
+p:ordered-list(1,letter) => ol > li{type=a}:fresh
+p:ordered-list(1,roman) => ol > li{type=i}:fresh
+p:ordered-list(1,upperLetter) => ol > li{type=A}:fresh
+p:ordered-list(1,upperRoman) => ol > li{type=I}:fresh
+
 r[style-name='Hyperlink'] =>
 
 p[style-name='Normal'] => p:fresh
 """)
-
 
 assert not _default_style_map_result.messages
 _default_style_map = _default_style_map_result.value

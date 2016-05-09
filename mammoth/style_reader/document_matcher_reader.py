@@ -22,14 +22,14 @@ def read_document_matcher_node(root_node):
         return document_matchers.underline
     elif element_node.expr_name == "strikethrough":
         return document_matchers.strikethrough
-    
+
 
 def _read_paragraph_node(paragraph_node):
     style_id = _read_style_id_node(paragraph_node.children[1])
     style_name = _read_style_name_node(paragraph_node.children[2])
     numbering = _read_list_node(paragraph_node.children[3])
     return document_matchers.paragraph(style_id=style_id, style_name=style_name, numbering=numbering)
-    
+
 
 def _read_run_node(run_node):
     style_id = _read_style_id_node(run_node.children[1])
@@ -53,9 +53,15 @@ def _read_style_name_node(style_name_node):
 
 def _read_list_node(list_node):
     if list_node.children:
+        num_fmt_node = list_node.children[0].children[4]
+        if num_fmt_node.text:
+            num_fmt = num_fmt_node.children[0].children[1].text
+        else:
+            num_fmt = None
         return documents.numbering_level(
             int(list_node.children[0].children[3].text) - 1,
             is_ordered=list_node.children[0].children[1].text == "ordered-list",
+            num_fmt=num_fmt
         )
     else:
         return None
@@ -83,9 +89,12 @@ style_name_specifier = "[style-name='" style_name "']"
 
 style_name = ~"[^']+"
 
-list = ":" list_type "(" ~"[0-9]+" ")"
+list = ":" list_type "(" ~"[0-9]+" optional_num_fmt? ")"
+
+optional_num_fmt = "," num_fmt
+
+num_fmt = "decimal" / "letter" / "roman" / "upperLetter" / "upperRoman"
 
 list_type = "ordered-list" / "unordered-list"
 """
 _grammar = Grammar(grammar_text)
-
